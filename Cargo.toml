@@ -11,7 +11,7 @@ documentation = "https://docs.rs/oi4-dnp-encoding"
 keywords = ["oi4","dnp","encoding","oec"]
 categories = ["encoding","parser-implementations"]
 readme = "README.md"
-rust-version = "1.74"
+rust-version = "1.80"
 # Keep published crate lean (examples & benches are small, keep them; exclude tooling & CI only):
 exclude = ["fuzz","tools",".github","target","dnp-encoder-rust.iml"]
 
