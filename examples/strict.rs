@@ -4,7 +4,7 @@
 
 #[cfg(all(feature = "alloc", feature = "strict"))]
 fn main() {
-    use oi4_dnp_encoding::{encode, decode, validate_dnp, Rules, ErrorKind};
+    use oi4_dnp_encoding::{decode, encode, validate_dnp, ErrorKind, Rules};
 
     let s = "Hello World!";
     let enc = encode(s);
@@ -13,7 +13,8 @@ fn main() {
 
     // Convert entire encoded string to lowercase -> should be rejected in strict mode.
     let bad_lower = enc.to_lowercase();
-    if bad_lower != enc { // ensure different
+    if bad_lower != enc {
+        // ensure different
         match decode(&bad_lower) {
             Ok(_) => println!("unexpected success (lowercase accepted)"),
             Err(e) => println!("expected lowercase rejection: {e:?}"),
@@ -26,9 +27,12 @@ fn main() {
     match validate_dnp(bad_unescaped, &rules) {
         Ok(_) => println!("unexpected success (unescaped reserved)"),
         Err(e) => match e.kind() {
-            ErrorKind::UnescapedReservedAscii(ch) => println!("expected unescaped reserved error for '{ch}' at {:?}", e.position()),
+            ErrorKind::UnescapedReservedAscii(ch) => println!(
+                "expected unescaped reserved error for '{ch}' at {:?}",
+                e.position()
+            ),
             other => println!("unexpected error kind: {other:?}"),
-        }
+        },
     }
 }
 

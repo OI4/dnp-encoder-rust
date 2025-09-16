@@ -6,12 +6,14 @@ authors = ["OI4 Contributors"]
 license = "MIT"
 description = "OI4 / DIN SPEC 91406 Digital Nameplate (DNP) encoding/decoding/validation in Rust"
 repository = "https://github.com/OI4/dnp-encoder-rust"
-homepage = "https://github.com/OI4dnp-encoder-rust"
-documentation = "https://github.com/OI4dnp-encoder-rust"
-keywords = ["oi4","dnp","encoding", "oec"]
+homepage = "https://github.com/OI4/dnp-encoder-rust"
+documentation = "https://docs.rs/oi4-dnp-encoding"
+keywords = ["oi4","dnp","encoding","oec"]
 categories = ["encoding","parser-implementations"]
 readme = "README.md"
 rust-version = "1.74"
+# Keep published crate lean (examples & benches are small, keep them; exclude tooling & CI only):
+exclude = ["fuzz","tools",".github","target","dnp-encoder-rust.iml"]
 
 [lib]
 name = "oi4_dnp_encoding"
@@ -32,7 +34,7 @@ rustdoc-args = ["--cfg","docsrs"]
 
 [dev-dependencies]
 proptest = "1.4"
-criterion = { version = "0.4", default-features = false }
+criterion = { version = "0.7.0", default-features = false }
 
 [build-dependencies]
 

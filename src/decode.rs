@@ -1,7 +1,11 @@
+#[cfg(feature = "strict")]
+use crate::encode::is_unreserved;
+#[cfg(feature = "alloc")]
 use crate::error::{Error, ErrorKind};
-#[cfg(feature = "strict")] use crate::encode::is_unreserved;
-#[cfg(feature = "alloc")] use alloc::string::String;
+#[cfg(feature = "alloc")]
+use alloc::string::String;
 
+#[cfg(feature = "alloc")]
 #[inline]
 fn hex_val(b: u8) -> Option<u8> {
     match b {
@@ -16,7 +20,8 @@ fn hex_val(b: u8) -> Option<u8> {
 pub fn decode(input: &str) -> Result<String, Error> {
     #[cfg(not(feature = "strict"))]
     {
-        if !input.as_bytes().contains(&b',') { // fast path only in non-strict mode
+        if !input.as_bytes().contains(&b',') {
+            // fast path only in non-strict mode
             return Ok(String::from(input));
         }
     }
@@ -24,18 +29,23 @@ pub fn decode(input: &str) -> Result<String, Error> {
     let bytes = input.as_bytes();
     let mut i = 0usize;
     while i < bytes.len() {
-        if bytes[i] == b',' { // escape expected
-            if i + 2 >= bytes.len() { return Err(Error::new(ErrorKind::LoneComma, Some(i))); }
-            let h1 = bytes[i+1];
-            let h2 = bytes[i+2];
+        if bytes[i] == b',' {
+            // escape expected
+            if i + 2 >= bytes.len() {
+                return Err(Error::new(ErrorKind::LoneComma, Some(i)));
+            }
+            let h1 = bytes[i + 1];
+            let h2 = bytes[i + 2];
             #[cfg(feature = "strict")]
             {
                 if (h1 >= b'a' && h1 <= b'f') || (h2 >= b'a' && h2 <= b'f') {
                     return Err(Error::new(ErrorKind::LowercaseHexInStrict, Some(i)));
                 }
             }
-            let v1 = hex_val(h1).ok_or_else(|| Error::new(ErrorKind::InvalidHexDigit(h1 as char), Some(i+1)))?;
-            let v2 = hex_val(h2).ok_or_else(|| Error::new(ErrorKind::InvalidHexDigit(h2 as char), Some(i+2)))?;
+            let v1 = hex_val(h1)
+                .ok_or_else(|| Error::new(ErrorKind::InvalidHexDigit(h1 as char), Some(i + 1)))?;
+            let v2 = hex_val(h2)
+                .ok_or_else(|| Error::new(ErrorKind::InvalidHexDigit(h2 as char), Some(i + 2)))?;
             let val = (v1 << 4) | v2;
             out.push(val as char);
             i += 3;

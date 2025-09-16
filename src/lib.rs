@@ -28,16 +28,15 @@
 #[cfg(feature = "alloc")]
 extern crate alloc;
 
-pub mod encode;
 pub mod decode;
-pub mod validate;
+pub mod encode;
 mod error;
+pub mod validate;
 
-pub use crate::encode::{encode_into, encoded_len};
-#[cfg(feature = "alloc")]
-pub use crate::encode::encode;
 #[cfg(feature = "alloc")]
 pub use crate::decode::decode;
-pub use crate::validate::{validate_dnp, Rules};
+#[cfg(feature = "alloc")]
+pub use crate::encode::encode;
+pub use crate::encode::{encode_into, encoded_len};
 pub use crate::error::{Error, ErrorKind};
-
+pub use crate::validate::{validate_dnp, Rules};

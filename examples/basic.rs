@@ -3,7 +3,7 @@
 
 #[cfg(feature = "alloc")]
 fn main() {
-    use oi4_dnp_encoding::{encode, decode, validate_dnp, Rules};
+    use oi4_dnp_encoding::{decode, encode, validate_dnp, Rules};
 
     let original = "Hello World!"; // space + '!' must be escaped
     let encoded = encode(original);
@@ -23,4 +23,3 @@ fn main() {
     // Compile-time hint if someone tries to run with --no-default-features and without alloc.
     println!("This example requires the 'alloc' feature (enabled by default).\nRun without --no-default-features.");
 }
-

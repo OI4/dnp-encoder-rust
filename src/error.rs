@@ -8,9 +8,15 @@ pub struct Error {
 }
 
 impl Error {
-    pub const fn new(kind: ErrorKind, pos: Option<usize>) -> Self { Self { kind, pos } }
-    pub const fn kind(&self) -> &ErrorKind { &self.kind }
-    pub const fn position(&self) -> Option<usize> { self.pos }
+    pub const fn new(kind: ErrorKind, pos: Option<usize>) -> Self {
+        Self { kind, pos }
+    }
+    pub const fn kind(&self) -> &ErrorKind {
+        &self.kind
+    }
+    pub const fn position(&self) -> Option<usize> {
+        self.pos
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -34,7 +40,11 @@ impl fmt::Display for ErrorKind {
 
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        if let Some(p) = self.pos { write!(f, "{} at position {p}", self.kind) } else { write!(f, "{}", self.kind) }
+        if let Some(p) = self.pos {
+            write!(f, "{} at position {p}", self.kind)
+        } else {
+            write!(f, "{}", self.kind)
+        }
     }
 }
 

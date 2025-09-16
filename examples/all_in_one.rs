@@ -7,21 +7,44 @@
 
 use oi4_dnp_encoding::{validate_dnp, Rules};
 
-#[cfg(not(feature = "alloc"))]
-use oi4_dnp_encoding::{encoded_len, encode_into};
 #[cfg(feature = "alloc")]
-use oi4_dnp_encoding::{encode, decode};
+use oi4_dnp_encoding::{decode, encode};
+#[cfg(not(feature = "alloc"))]
+use oi4_dnp_encoding::{encode_into, encoded_len};
 
 #[cfg(not(feature = "alloc"))]
 use core::fmt::Write as _;
 
 // Small fixed buffer writer used only in no-alloc mode.
 #[cfg(not(feature = "alloc"))]
-struct Fixed<const N: usize> { buf: [u8; N], pos: usize }
+struct Fixed<const N: usize> {
+    buf: [u8; N],
+    pos: usize,
+}
 #[cfg(not(feature = "alloc"))]
-impl<const N: usize> Fixed<N> { fn new() -> Self { Self { buf: [0; N], pos: 0 } } fn as_str(&self) -> &str { core::str::from_utf8(&self.buf[..self.pos]).unwrap() } }
+impl<const N: usize> Fixed<N> {
+    fn new() -> Self {
+        Self {
+            buf: [0; N],
+            pos: 0,
+        }
+    }
+    fn as_str(&self) -> &str {
+        core::str::from_utf8(&self.buf[..self.pos]).unwrap()
+    }
+}
 #[cfg(not(feature = "alloc"))]
-impl<const N: usize> core::fmt::Write for Fixed<N> { fn write_str(&mut self, s: &str) -> core::fmt::Result { let b = s.as_bytes(); if self.pos + b.len() > N { return Err(core::fmt::Error); } self.buf[self.pos..self.pos+b.len()].copy_from_slice(b); self.pos += b.len(); Ok(()) }}
+impl<const N: usize> core::fmt::Write for Fixed<N> {
+    fn write_str(&mut self, s: &str) -> core::fmt::Result {
+        let b = s.as_bytes();
+        if self.pos + b.len() > N {
+            return Err(core::fmt::Error);
+        }
+        self.buf[self.pos..self.pos + b.len()].copy_from_slice(b);
+        self.pos += b.len();
+        Ok(())
+    }
+}
 
 fn main() {
     let input = "Hello World!"; // contains space & '!'
@@ -53,9 +76,17 @@ fn main() {
     println!("validate default rules OK");
 
     // Enforce masking for reserved ASCII
-    let masking_rules = Rules { enforce_reserved_masking: true, ..Rules::default() };
-    if let Err(e) = validate_dnp("Hello World!", &masking_rules) { // space & ! must be escaped
-        println!("expected masking error: {:?} at {:?}", e.kind(), e.position());
+    let masking_rules = Rules {
+        enforce_reserved_masking: true,
+        ..Rules::default()
+    };
+    if let Err(e) = validate_dnp("Hello World!", &masking_rules) {
+        // space & ! must be escaped
+        println!(
+            "expected masking error: {:?} at {:?}",
+            e.kind(),
+            e.position()
+        );
     }
 
     // --- Strict-like demonstration (independent of compile-time strict feature) ---
@@ -72,7 +103,10 @@ fn main() {
         #[cfg(feature = "strict")]
         match res {
             Ok(_) => println!("unexpected lowercase accepted"),
-            Err(e) => println!("strict feature active -> lowercase decode error kind = {:?}", e.kind()),
+            Err(e) => println!(
+                "strict feature active -> lowercase decode error kind = {:?}",
+                e.kind()
+            ),
         }
         #[cfg(not(feature = "strict"))]
         println!("non-strict -> lowercase accepted -> {:?}", res.unwrap());

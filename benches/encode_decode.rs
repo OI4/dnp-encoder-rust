@@ -1,4 +1,4 @@
-use criterion::{criterion_group, criterion_main, Criterion, black_box};
+use criterion::{black_box, criterion_group, criterion_main, Criterion};
 
 #[cfg(feature = "alloc")]
 fn bench_encode(c: &mut Criterion) {
@@ -13,10 +13,12 @@ fn bench_encode(c: &mut Criterion) {
 
 #[cfg(feature = "alloc")]
 fn bench_decode(c: &mut Criterion) {
-    use oi4_dnp_encoding::{encode, decode};
+    use oi4_dnp_encoding::{decode, encode};
     let src = "Hello World!".repeat(256);
     let enc = encode(&src);
-    c.bench_function("decode_large", |b| b.iter(|| black_box(decode(&enc).unwrap())));
+    c.bench_function("decode_large", |b| {
+        b.iter(|| black_box(decode(&enc).unwrap()))
+    });
 }
 
 fn criterion_benchmark(c: &mut Criterion) {
@@ -29,4 +31,3 @@ fn criterion_benchmark(c: &mut Criterion) {
 
 criterion_group!(benches, criterion_benchmark);
 criterion_main!(benches);
-

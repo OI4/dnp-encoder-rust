@@ -10,7 +10,7 @@ pub(crate) const fn is_unreserved(b: u8) -> bool {
     )
 }
 
-const HEX_UPPER: &[u8;16] = b"0123456789ABCDEF";
+const HEX_UPPER: &[u8; 16] = b"0123456789ABCDEF";
 
 /// Compute encoded length without allocating.
 pub fn encoded_len(input: &str) -> usize {
@@ -19,14 +19,24 @@ pub fn encoded_len(input: &str) -> usize {
     let mut len = 0usize;
     while i < bytes.len() {
         let b = bytes[i];
-        if b < 0x80 { // ASCII
-            if is_unreserved(b) { len += 1; } else { len += 3; }
+        if b < 0x80 {
+            // ASCII
+            if is_unreserved(b) {
+                len += 1;
+            } else {
+                len += 3;
+            }
             i += 1;
-        } else { // multi-byte UTF-8 sequence – copy verbatim
+        } else {
+            // multi-byte UTF-8 sequence – copy verbatim
             // Determine sequence length from first byte (UTF-8 invariant; input is &str)
-            let seq_len = if b & 0b1110_0000 == 0b1100_0000 {2}
-                else if b & 0b1111_0000 == 0b1110_0000 {3}
-                else {4};
+            let seq_len = if b & 0b1110_0000 == 0b1100_0000 {
+                2
+            } else if b & 0b1111_0000 == 0b1110_0000 {
+                3
+            } else {
+                4
+            };
             len += seq_len;
             i += seq_len;
         }
@@ -36,7 +46,7 @@ pub fn encoded_len(input: &str) -> usize {
 
 /// Encode into provided writer (zero-allocation path other than writer itself).
 pub fn encode_into(input: &str, out: &mut impl fmt::Write) -> fmt::Result {
-    let mut buf = [0u8;4];
+    let mut buf = [0u8; 4];
     for ch in input.chars() {
         if ch.is_ascii() {
             let b = ch as u8;
