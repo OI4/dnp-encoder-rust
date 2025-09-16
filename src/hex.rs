@@ -13,7 +13,7 @@ pub(crate) const fn hex_val(b: u8) -> Option<u8> {
 
 #[inline]
 pub(crate) const fn is_hex(b: u8) -> bool {
-    matches!(b, b'0'..=b'9' | b'a'..=b'f' | b'A'..=b'F')
+    b.is_ascii_hexdigit()
 }
 
 #[inline]
@@ -39,8 +39,12 @@ mod tests {
 
     #[test]
     fn test_is_hex() {
-        for b in b"0123456789ABCDEFabcdef" { assert!(is_hex(*b)); }
-        for b in b"GXYZ!" { assert!(!is_hex(*b)); }
+        for b in b"0123456789ABCDEFabcdef" {
+            assert!(is_hex(*b));
+        }
+        for b in b"GXYZ!" {
+            assert!(!is_hex(*b));
+        }
     }
 
     #[test]
@@ -52,4 +56,3 @@ mod tests {
         assert!(!has_lowercase_hex(b'0', b'F'));
     }
 }
-
