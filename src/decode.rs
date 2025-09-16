@@ -4,7 +4,10 @@ use crate::encode::is_unreserved;
 use crate::error::{Error, ErrorKind};
 #[cfg(feature = "alloc")]
 use alloc::string::String;
+#[cfg(feature = "strict")]
 use crate::hex::{hex_val, has_lowercase_hex};
+#[cfg(not(feature = "strict"))]
+use crate::hex::hex_val;
 
 #[cfg(feature = "alloc")]
 pub fn decode(input: &str) -> Result<String, Error> {
