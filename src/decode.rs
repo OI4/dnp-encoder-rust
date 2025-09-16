@@ -2,12 +2,12 @@
 use crate::encode::is_unreserved;
 #[cfg(feature = "alloc")]
 use crate::error::{Error, ErrorKind};
-#[cfg(feature = "alloc")]
-use alloc::string::String;
-#[cfg(feature = "strict")]
-use crate::hex::{hex_val, has_lowercase_hex};
 #[cfg(not(feature = "strict"))]
 use crate::hex::hex_val;
+#[cfg(feature = "strict")]
+use crate::hex::{has_lowercase_hex, hex_val};
+#[cfg(feature = "alloc")]
+use alloc::string::String;
 
 #[cfg(feature = "alloc")]
 pub fn decode(input: &str) -> Result<String, Error> {
