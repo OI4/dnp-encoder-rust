@@ -4,17 +4,7 @@ use crate::encode::is_unreserved;
 use crate::error::{Error, ErrorKind};
 #[cfg(feature = "alloc")]
 use alloc::string::String;
-
-#[cfg(feature = "alloc")]
-#[inline]
-fn hex_val(b: u8) -> Option<u8> {
-    match b {
-        b'0'..=b'9' => Some(b - b'0'),
-        b'a'..=b'f' => Some(10 + (b - b'a')),
-        b'A'..=b'F' => Some(10 + (b - b'A')),
-        _ => None,
-    }
-}
+use crate::hex::{hex_val, has_lowercase_hex};
 
 #[cfg(feature = "alloc")]
 pub fn decode(input: &str) -> Result<String, Error> {
@@ -38,7 +28,7 @@ pub fn decode(input: &str) -> Result<String, Error> {
             let h2 = bytes[i + 2];
             #[cfg(feature = "strict")]
             {
-                if (h1 >= b'a' && h1 <= b'f') || (h2 >= b'a' && h2 <= b'f') {
+                if has_lowercase_hex(h1, h2) {
                     return Err(Error::new(ErrorKind::LowercaseHexInStrict, Some(i)));
                 }
             }

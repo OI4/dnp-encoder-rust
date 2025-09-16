@@ -31,6 +31,7 @@ extern crate alloc;
 pub mod decode;
 pub mod encode;
 mod error;
+mod hex; // internal hex helpers
 pub mod validate;
 
 #[cfg(feature = "alloc")]

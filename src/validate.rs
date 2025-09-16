@@ -1,5 +1,6 @@
 use crate::encode::is_unreserved;
 use crate::error::{Error, ErrorKind};
+use crate::hex::{has_lowercase_hex, is_hex};
 
 /// Validation rule set (runtime adjustable apart from compile-time `strict` feature).
 #[derive(Debug, Clone, Copy, Default)]
@@ -78,15 +79,4 @@ pub fn validate_dnp(input: &str, rules: &Rules) -> Result<(), Error> {
         }
     }
     Ok(())
-}
-
-#[inline]
-const fn is_hex(b: u8) -> bool {
-    //matches!(b, b'0'..=b'9' | b'a'..=b'f' | b'A'..=b'F')
-    b.is_ascii_hexdigit()
-}
-
-#[inline]
-fn has_lowercase_hex(h1: u8, h2: u8) -> bool {
-    (b'a'..=b'f').contains(&h1) || (b'a'..=b'f').contains(&h2)
 }
