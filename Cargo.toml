@@ -1,0 +1,54 @@
+[package]
+name = "oi4-dnp-encoding"
+version = "0.1.0"
+edition = "2021"
+authors = ["OI4 Contributors"]
+license = "MIT"
+description = "OI4 / DIN SPEC 91406 Digital Nameplate (DNP) encoding/decoding/validation in Rust"
+repository = "https://github.com/OI4/dnp-encoder-rust"
+homepage = "https://github.com/OI4dnp-encoder-rust"
+documentation = "https://github.com/OI4dnp-encoder-rust"
+keywords = ["oi4","dnp","encoding", "oec"]
+categories = ["encoding","parser-implementations"]
+readme = "README.md"
+rust-version = "1.74"
+
+[lib]
+name = "oi4_dnp_encoding"
+path = "src/lib.rs"
+crate-type = ["rlib"]
+
+[features]
+default = ["std"]
+# std implies alloc
+std = ["alloc"]
+alloc = []
+# Strict mode enforces uppercase hex triplets and forbids unmasked reserved ASCII.
+strict = []
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg","docsrs"]
+
+[dev-dependencies]
+proptest = "1.4"
+criterion = { version = "0.4", default-features = false }
+
+[build-dependencies]
+
+[dependencies]
+# No runtime dependencies by design.
+
+[[bench]]
+name = "encode_decode"
+harness = false
+
+[[bin]]
+name = "oi4-dnp-encoding-cli"
+path = "src/main.rs"
+required-features = ["std"]
+
+[[bin]]
+name = "gen_golden"
+path = "tools/gen_golden.rs"
+required-features = ["std","alloc"]
