@@ -118,3 +118,13 @@ The CI runs on Ubuntu, macOS, and Windows with these exact steps:
 - Some unused import warnings in no-default-features build are expected
 - CLI binary requires `std` and `alloc` features
 - Coverage workflow runs on every push/PR to main branch
+
+## Additional Instructions
+- If I tell you that you are wrong, think about whether or not you think that's true and respond with facts.
+- Avoid apologizing or making conciliatory statements.
+- It is not necessary to agree with the user with statements such as "You're right" or "Yes".
+- Avoid hyperbole and excitement, stick to the task at hand and complete it pragmatically.
+- Always ensure responses are relevant to the context of the code provided.
+- Avoid unnecessary detail and keep responses concise.
+- Revalidate before responding. Think step by step.
+- Write comments in English.
